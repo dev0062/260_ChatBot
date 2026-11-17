@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina AI — Intelligent Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar: Brand, New Chat, Chat History, User Profile -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" stroke-linejoin="round"/>
+                            <polyline points="2 17 12 22 22 17" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="2 12 12 17 22 12" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <div class="brand-title-row">
+                            <h1>Lumina AI</h1>
+                            <span class="pro-tag">PRO</span>
+                        </div>
+                        <span>Intelligent Workspace</span>
+                    </div>
+                </div>
+                <button class="icon-btn mobile-close" id="closeSidebarBtn" aria-label="Tutup Sidebar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+                </svg>
+                <span>Percakapan Baru</span>
+            </button>
+
+            <!-- Search Chat History -->
+        </aside>
+    </div>
+</body>
+</html>
