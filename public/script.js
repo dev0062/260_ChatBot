@@ -461,3 +461,265 @@ function appendMessageElementToDOM(role, content = '', timeStr = '', isError = f
     wrap.className = 'message-bubble-wrap';
 
     const displayTime = timeStr || getTimeString();
+    const senderName = role === 'user' ? userProfile.name : 'Lumina AI';
+
+    const meta = document.createElement('div');
+    meta.className = 'message-meta';
+    meta.textContent = `${senderName} • ${displayTime}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    if (isError) {
+        bubble.classList.add('error-bubble');
+    }
+
+    if (role === 'user') {
+        bubble.textContent = content;
+    } else if (!content) {
+        bubble.innerHTML = `
+            <div class="typing-indicator" aria-label="Sedang mengetik">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+    } else {
+        bubble.innerHTML = renderMarkdown(content);
+    }
+
+    wrap.appendChild(meta);
+    wrap.appendChild(bubble);
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    messagesList.appendChild(row);
+    scrollToBottom();
+
+    return bubble;
+}
+
+function setStreamingState(active) {
+    isStreaming = active;
+    stopBtn.classList.toggle('hidden', !active);
+    sendBtn.classList.toggle('hidden', active);
+    sendBtn.disabled = active || !messageInput.value.trim();
+}
+
+// ==========================================
+// 4. EVENT LISTENERS & STREAMING KE /api/chat
+// ==========================================
+function toggleSidebar(open) {
+    sidebar.classList.toggle('open', open);
+    sidebarOverlay.classList.toggle('open', open);
+}
+
+openSidebarBtn.addEventListener('click', () => toggleSidebar(true));
+closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+newChatBtn.addEventListener('click', () => createNewSession(true));
+deleteCurrentChatBtn.addEventListener('click', () => {
+    if (activeSessionId) {
+        deleteSession(activeSessionId);
+    }
+});
+clearAllHistoryBtn.addEventListener('click', clearAllSessions);
+historySearchInput.addEventListener('input', renderHistorySidebar);
+
+messageInput.addEventListener('input', () => {
+    messageInput.style.height = 'auto';
+    messageInput.style.height = `${Math.min(messageInput.scrollHeight, 160)}px`;
+    sendBtn.disabled = !messageInput.value.trim() || isStreaming;
+});
+
+messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (!sendBtn.disabled) {
+            chatForm.requestSubmit();
+        }
+    }
+});
+
+stopBtn.addEventListener('click', () => {
+    if (abortController) {
+        abortController.abort();
+    }
+});
+
+chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const userText = messageInput.value.trim();
+    if (!userText || isStreaming) return;
+
+    let session = getActiveSession();
+    if (!session) {
+        session = createNewSession(false);
+    }
+
+    // Reset input box
+    messageInput.value = '';
+    messageInput.style.height = 'auto';
+
+    const userTime = getTimeString();
+
+    // Otomatis beri judul percakapan dari pesan pertama pengguna
+    if (session.messages.length === 0) {
+        session.title =
+            userText.length > 36 ? userText.slice(0, 36).trim() + '...' : userText;
+        activeChatTitle.textContent = session.title;
+    }
+
+    // Simpan pesan pengguna ke sesi & localStorage
+    session.messages.push({
+        role: 'user',
+        content: userText,
+        time: userTime
+    });
+    session.updatedAt = Date.now();
+
+    // Pindahkan sesi yang baru aktif ke urutan paling atas di sidebar
+    chatSessions = [session, ...chatSessions.filter((s) => s.id !== session.id)];
+    saveSessionsToStorage();
+    renderHistorySidebar();
+
+    appendMessageElementToDOM('user', userText, userTime);
+
+    // Siapkan payload messages hanya untuk pesan valid (bukan bubble error)
+    const apiMessages = session.messages
+        .filter((m) => !m.isError)
+        .map((m) => ({
+            role: m.role,
+            content: m.content
+        }));
+
+    const aiTime = getTimeString();
+    const aiBubble = appendMessageElementToDOM('assistant', '', aiTime);
+
+    setStreamingState(true);
+    abortController = new AbortController();
+
+    let assistantReply = '';
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                messages: apiMessages
+            }),
+            signal: abortController.signal
+        });
+
+        if (!response.ok) {
+            let errorMessage = `HTTP Error ${response.status}`;
+            try {
+                const errJson = await response.json();
+                if (errJson?.error) {
+                    errorMessage =
+                        typeof errJson.error === 'string'
+                            ? errJson.error
+                            : JSON.stringify(errJson.error);
+                }
+            } catch (_) {
+                // Abaikan jika gagal parse JSON
+            }
+            throw new Error(errorMessage);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed || !trimmed.startsWith('data: ')) continue;
+
+                const dataStr = trimmed.slice(6).trim();
+                if (dataStr === '[DONE]') continue;
+
+                try {
+                    const parsed = JSON.parse(dataStr);
+
+                    if (typeof parsed === 'string') {
+                        assistantReply += parsed;
+                        aiBubble.innerHTML = renderMarkdown(assistantReply);
+                        scrollToBottom();
+                    } else if (parsed && typeof parsed === 'object') {
+                        if (parsed.error) {
+                            throw new Error(parsed.error);
+                        }
+                        if (parsed.content) {
+                            assistantReply += parsed.content;
+                            aiBubble.innerHTML = renderMarkdown(assistantReply);
+                            scrollToBottom();
+                        }
+                    }
+                } catch (parseErr) {
+                    if (parseErr.message && !parseErr.message.includes('JSON')) {
+                        throw parseErr;
+                    }
+                }
+            }
+        }
+
+        const finalReply =
+            assistantReply || '*Tidak ada teks respons yang diterima dari server.*';
+        aiBubble.innerHTML = renderMarkdown(finalReply);
+
+        session.messages.push({
+            role: 'assistant',
+            content: finalReply,
+            time: getTimeString()
+        });
+        session.updatedAt = Date.now();
+        saveSessionsToStorage();
+        renderHistorySidebar();
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            const partial = assistantReply
+                ? `${assistantReply}\n\n*(Respons dihentikan oleh pengguna)*`
+                : '*(Respons dihentikan oleh pengguna)*';
+            aiBubble.innerHTML = renderMarkdown(partial);
+            session.messages.push({
+                role: 'assistant',
+                content: partial,
+                time: getTimeString()
+            });
+        } else {
+            const errText = `**Gagal mendapatkan respons dari server:**\n\`${error.message}\``;
+            aiBubble.classList.add('error-bubble');
+            aiBubble.innerHTML = renderMarkdown(errText);
+            session.messages.push({
+                role: 'assistant',
+                content: errText,
+                time: getTimeString(),
+                isError: true
+            });
+        }
+        session.updatedAt = Date.now();
+        saveSessionsToStorage();
+        renderHistorySidebar();
+    } finally {
+        setStreamingState(false);
+        abortController = null;
+        messageInput.focus();
+    }
+});
+
+// ==========================================
+// 5. JALANKAN SAAT HALAMAN DIMUAT
+// ==========================================
+initTheme();
+loadUserProfile();
+loadSessionsFromStorage();
+renderHistorySidebar();
+renderActiveSessionMessages();
