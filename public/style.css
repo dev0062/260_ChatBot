@@ -93,3 +93,320 @@ html, body {
     width: 100vw;
 }
 
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(22px);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 18px 14px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 0 4px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 8px 22px rgba(14, 165, 233, 0.35);
+}
+
+.brand-logo svg {
+    width: 21px;
+    height: 21px;
+}
+
+.brand-title-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.brand-text h1 {
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.pro-tag {
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--accent-gradient);
+    color: #ffffff;
+    letter-spacing: 0.05em;
+}
+
+.brand-text > span {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.new-chat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    background: var(--accent-gradient);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.24);
+}
+
+.new-chat-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(14, 165, 233, 0.36);
+    filter: brightness(1.06);
+}
+
+/* Search History Box */
+.history-search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+}
+
+.history-search-box:focus-within {
+    border-color: var(--border-focus);
+    color: var(--text-primary);
+}
+
+.history-search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.82rem;
+}
+
+.history-search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+/* History Section */
+.sidebar-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.sidebar-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+    margin-bottom: 8px;
+}
+
+.sidebar-label {
+    font-size: 0.71rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.clear-all-history-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.18s;
+}
+
+.clear-all-history-btn:hover {
+    color: var(--danger);
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 2px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.22);
+    border-radius: 999px;
+}
+
+.history-empty {
+    padding: 24px 12px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.history-item {
+    group: history;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 11px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.history-item:hover {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.history-item.active {
+    background: var(--bg-surface-hover);
+    color: var(--text-primary);
+    border-color: rgba(14, 165, 233, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.history-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.history-icon {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: var(--accent-primary);
+}
+
+.history-text-wrap {
+    min-width: 0;
+    flex: 1;
+}
+
+.history-title {
+    font-size: 0.84rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.history-delete-btn {
+    opacity: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.16s ease;
+}
+
+.history-item:hover .history-delete-btn,
+.history-item.active .history-delete-btn {
+    opacity: 1;
+}
+
+.history-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+}
+
+/* User Profile Card in Sidebar Footer */
+.sidebar-footer {
+    padding-top: 12px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.user-profile-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-profile-card:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--border-focus);
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--accent-gradient);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
