@@ -23,6 +23,34 @@ app.post('/api/chat', async (req, res) => {
             });
         }
 
+        const response = await fetch(
+            'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'gemini-3.5-flash-lite',
+                    messages: messages,
+                    temperature: 0.7,
+                    max_tokens: 1000,
+                    stream: true
+                })
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+
+            console.error('Error from Gemini API:', errorData);
+
+            return res.status(response.status).json({
+                error: errorData
+            });
+        }
+
     } catch (error) {
         console.error('Server Error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server' });
