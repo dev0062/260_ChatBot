@@ -48,7 +48,51 @@
             </button>
 
             <!-- Search Chat History -->
+            <div class="history-search-box">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="historySearchInput" placeholder="Cari riwayat chat..." autocomplete="off" />
+            </div>
+
+            <!-- Persistent Chat History List -->
+            <div class="sidebar-section">
+                <div class="sidebar-label-row">
+                    <span class="sidebar-label">Riwayat Percakapan</span>
+                    <button class="clear-all-history-btn" id="clearAllHistoryBtn" title="Hapus Semua Riwayat">
+                        Hapus Semua
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- Diisi otomatis dari localStorage oleh script.js -->
+                </div>
+            </div>
+
+            <!-- User Profile Section -->
+            <div class="sidebar-footer">
+                <div class="user-profile-card" id="openProfileModalBtn" title="Klik untuk ubah profil pengguna">
+                    <div class="user-avatar" id="sidebarUserAvatar">ZN</div>
+                    <div class="user-info">
+                        <div class="user-name" id="sidebarUserName">Zain</div>
+                        <div class="user-role" id="sidebarUserRole">Pro Member • Aktif</div>
+                    </div>
+                    <div class="user-settings-icon">
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </aside>
+
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Workspace -->
+        <main class="chat-main">
+            <header class="chat-header">
     </div>
 </body>
 </html>
