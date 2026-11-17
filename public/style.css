@@ -1,0 +1,95 @@
+:root,
+[data-theme="dark"] {
+    --bg-primary: #090d16;
+    --bg-secondary: #0f1624;
+    --bg-surface: rgba(23, 33, 53, 0.72);
+    --bg-surface-hover: rgba(36, 50, 78, 0.85);
+    --bg-glass: rgba(13, 19, 33, 0.84);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-focus: rgba(14, 165, 233, 0.6);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-primary: #0ea5e9;
+    --accent-secondary: #6366f1;
+    --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 55%, #8b5cf6 100%);
+    --user-bubble: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+    --ai-bubble: rgba(23, 33, 53, 0.82);
+    --code-bg: #060911;
+    --danger: #ef4444;
+    --success: #10b981;
+    --shadow-lg: 0 18px 46px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] {
+    --bg-primary: #f4f7fb;
+    --bg-secondary: #ffffff;
+    --bg-surface: rgba(237, 242, 249, 0.9);
+    --bg-surface-hover: rgba(224, 232, 245, 0.95);
+    --bg-glass: rgba(255, 255, 255, 0.88);
+    --border-color: rgba(15, 23, 42, 0.09);
+    --border-focus: rgba(2, 132, 199, 0.55);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent-primary: #0284c7;
+    --accent-secondary: #4f46e5;
+    --accent-gradient: linear-gradient(135deg, #0284c7 0%, #4f46e5 55%, #7c3aed 100%);
+    --user-bubble: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+    --ai-bubble: #ffffff;
+    --code-bg: #0f172a;
+    --danger: #dc2626;
+    --success: #059669;
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.07);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient Background Glows */
+.bg-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-glow-1 {
+    width: 440px;
+    height: 440px;
+    background: #0ea5e9;
+    top: -130px;
+    right: -90px;
+}
+
+.bg-glow-2 {
+    width: 400px;
+    height: 400px;
+    background: #6366f1;
+    bottom: -130px;
+    left: -90px;
+}
+
+/* Main App Layout */
+.app-layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
