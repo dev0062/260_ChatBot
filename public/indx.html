@@ -93,6 +93,123 @@
         <!-- Main Workspace -->
         <main class="chat-main">
             <header class="chat-header">
+                <div class="header-left">
+                    <button class="icon-btn mobile-menu-btn" id="openSidebarBtn" aria-label="Buka Sidebar">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <div class="header-title-group">
+                        <h2 id="activeChatTitle">Percakapan Baru</h2>
+                        <div class="header-sub-meta">
+                            <span class="badge-live">
+                                <span class="pulse"></span>
+                                Lumina Engine v3.5
+                            </span>
+                            <span class="storage-indicator" title="Semua percakapan otomatis tersimpan di perangkat Anda">
+                                • Tersimpan Otomatis
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="icon-btn" id="themeToggleBtn" title="Ganti Mode Gelap / Terang">
+                        <svg class="sun-icon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn danger-hover" id="deleteCurrentChatBtn" title="Hapus Sesi Percakapan Ini">
+                        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Messages Stream Area -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Clean Welcome Screen (Tanpa Prompt Cepat) -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-orb">
+                        <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" stroke-linejoin="round"/>
+                            <polyline points="2 17 12 22 22 17" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="2 12 12 17 22 12" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2 id="welcomeGreeting">Halo, Zain!</h2>
+                    <p>Selamat datang di <strong>Lumina AI</strong>. Mulai ketik pesan di bawah untuk berdiskusi. Seluruh riwayat percakapan Anda tersimpan otomatis dan tetap ada meskipun halaman ditutup.</p>
+                </div>
+
+                <!-- Messages List -->
+                <div class="messages-list" id="messagesList"></div>
+            </div>
+
+            <!-- Bottom Input Bar -->
+            <footer class="chat-input-wrapper">
+                <form class="chat-form" id="chatForm">
+                    <div class="input-box">
+                        <textarea
+                            id="messageInput"
+                            rows="1"
+                            placeholder="Tanyakan apa saja ke Lumina AI... (Enter untuk kirim, Shift+Enter baris baru)"
+                            autocomplete="off"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button type="button" class="stop-btn hidden" id="stopBtn" title="Hentikan Respons">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                                    <rect x="6" y="6" width="12" height="12" rx="2"/>
+                                </svg>
+                                <span>Berhenti</span>
+                            </button>
+                            <button type="submit" class="send-btn" id="sendBtn" aria-label="Kirim Pesan" disabled>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-footer-info">
+                        <span>Lumina AI Workspace • Riwayat chat tersimpan permanen di browser Anda</span>
+                    </div>
+                </form>
+            </footer>
+        </main>
     </div>
+
+    <!-- Modal Edit Profil Pengguna -->
+    <div class="modal-backdrop hidden" id="profileModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Profil Pengguna</h3>
+                <button type="button" class="icon-btn" id="closeProfileModalBtn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="profileForm" class="modal-body">
+                <div class="form-group">
+                    <label for="userNameInput">Nama Pengguna</label>
+                    <input type="text" id="userNameInput" placeholder="Masukkan nama Anda" required maxlength="32" />
+                </div>
+                <div class="form-group">
+                    <label for="userRoleInput">Status / Role</label>
+                    <input type="text" id="userRoleInput" placeholder="Contoh: Pro Member / Developer" maxlength="40" />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelProfileBtn">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan Profil</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
